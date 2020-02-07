@@ -1,0 +1,357 @@
+
+function setup() {
+  createCanvas(800, 800);
+  frameRate(60);
+  p1 = new bPlayer(350,550,4);
+  t1 = new Trader(36,491);
+  t2 = new Trader(159,283);
+  t3 = new Trader(333,214);
+  t4 = new Trader(574,228);
+  t5 = new Trader(660,450);
+  p1.assignObj();
+  p1.assignGoal();
+  t1.assignObj();
+  t1.assignGoal();
+  t2.assignObj();
+  t2.assignGoal();
+  t3.assignObj();
+  t3.assignGoal();
+  t4.assignObj();
+  t4.assignGoal();
+  t5.assignObj();
+  t5.assignGoal();
+}
+// classes
+//Trader
+class Trader{
+  constructor(ix,iy){
+    this.posX=ix;
+    this.posY=iy;
+  }
+  check_player(){
+    if(p1.posX < this.posX + 50 && p1.posX > this.posX - 50 && p1.posY < this.posY + 50 && p1.posY > this.posY -50){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+  display(){
+    fill(0,255,0);
+    ellipse(this.posX,this.posY,20,20);
+    fill(0);
+    if(this.check_player()){
+      text('Trade',this.posX-30,this.posY-15);
+      text(this.goal,this.posX +5,this.posY - 15);
+      text('for',this.posX + 21,this.posY - 15);
+      text(this.obj,this.posX + 39,this.posY - 15);
+      text('?',this.posX + 52,this.posY - 15);
+    }
+  }
+  assignObj(){
+    this.obj = ceil(random(10));
+  }
+  assignGoal(){
+    this.goal = ceil(random(10))
+    while (this.goal == this.obj){
+      this.goal = ceil(random(10));
+    }
+  }
+  trade(){
+    if(keyIsPressed && keyCode == 12 && this.check_player() && this.goal == p1.obj){
+      p1.obj = this.obj;
+      this.assignObj();
+      this.assignGoal();
+    }
+  }
+}
+// Top-Down Player Class
+class bPlayer{
+  constructor(ix,iy,is){
+    this.posX=ix;
+    this.posY=iy;
+    this.speed=is;
+    this.obj=0;
+    this.goal=0;
+  }
+  display(){
+    fill(255,255,255);
+    ellipse(this.posX,this.posY,20,20);
+    fill(0);
+    text('You have object',10,20);
+    text(this.obj,100,20);
+    text('You need object',10,40);
+    text(this.goal,100,40);
+  }
+  move(){
+   if(keyIsPressed){
+     if(keyCode == 38){
+       this.posY -= this.speed;
+     }
+     if(keyCode == 40){
+       this.posY += this.speed;
+     }
+     if(keyCode == 37){
+       this.posX -= this.speed;
+     }
+     if(keyCode == 39){
+       this.posX += this.speed;
+     }
+     if(keyCode == 36){
+       this.posY -= this.speed;
+       this.posX -= this.speed;
+     }
+     if(keyCode == 33){
+       this.posY -= this.speed;
+       this.posX += this.speed;
+     }
+     if(keyCode == 35){
+       this.posY += this.speed;
+       this.posX -= this.speed;
+     }
+     if(keyCode == 34){
+       this.posY += this.speed;
+       this.posX += this.speed;
+     }
+   }
+    if(this.posX > 780){
+      this.posX = 780;
+    }
+    if(this.posX < 20){
+      this.posX = 20;
+    }
+    if(this.posY > 780){
+      this.posY = 780;
+    }
+    if(this.posY < 50){
+      this.posY = 50;
+    }
+  }
+  assignObj(){
+    this.obj = ceil(random(10));
+  }
+  assignGoal(){
+    this.goal = ceil(random(10))
+    while (this.goal == this.obj){
+      this.goal = ceil(random(10));
+    }
+  }
+  all(){
+    this.display();
+    this.move();
+  }
+}
+// Date Class
+class Date{
+  constructor(imonth,iday,iyear,isec){
+    this.year=iyear;
+    this.month=imonth;
+    this.day=iday;
+    this.secPerDay=isec;
+  }
+  checkLeap(){
+    if(this.year % 4 == 0 && this.year % 100 == 0 && this.year % 400 == 0){
+      return true;
+    }
+    else if(this.year % 4 && this.year % 100 == 0){
+      return false;
+    }
+    else if(this.year % 4){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+  advanceTime(){
+    this.day += (1/60) / this.secPerDay;
+    if(this.month == 1){
+      if(floor(this.day) > 31){
+        this.day = 1;
+        this.month = 2;
+        
+      }
+    }
+    if(this.month == 2 && !this.checkLeap){
+      if(floor(this.day) > 28){
+        this.day = 1;
+        this.month = 3;
+      }
+    }
+    if(this.month == 2 && this.checkLeap){
+      if(floor(this.day) > 29){
+        this.day = 1;
+        this.month = 3;
+      }
+    }
+     if(this.month == 3){
+      if(floor(this.day) > 31){
+        this.day = 1;
+        this.month = 4;
+      }
+    }
+     if(this.month == 4){
+      if(floor(this.day) > 30){
+        this.day = 1;
+        this.month = 5;
+      }
+    }
+     if(this.month == 5){
+      if(floor(this.day) > 31){
+        this.day = 1;
+        this.month = 6;
+      }
+    }
+     if(this.month == 6){
+      if(floor(this.day) > 30){
+        this.day = 1;
+        this.month = 7;
+      }
+    }
+     if(this.month == 7){
+      if(floor(this.day) > 31){
+        this.day = 1;
+        this.month = 8;
+      }
+    }
+     if(this.month == 8){
+      if(floor(this.day) > 31){
+        this.day = 1;
+        this.month = 9;
+      }
+    }
+     if(this.month == 9){
+      if(floor(this.day) > 30){
+        this.day = 1;
+        this.month = 10;
+      }
+    }
+     if(this.month == 10){
+      if(floor(this.day) > 31){
+        this.day = 1;
+        this.month = 11;
+      }
+    }
+     if(this.month == 11){
+      if(floor(this.day) > 30){
+        this.day = 1;
+        this.month = 12;
+      }
+    }
+     if(this.month == 12){
+      if(floor(this.day) > 31){
+        this.day = 1;
+        this.month = 1;
+        this.year++;
+      }
+    }
+  }
+}
+// Verticle Slider class
+class vSlider{
+  constructor(ixp, iyp1, iyp2, iw, iv1, iv2){
+     this.posX=ixp;
+    this.maxY=iyp1;
+    this.minY=iyp2;
+    this.w=iw;
+    this.variable=(iv1 + iv2) / 2;
+    this.maxValue=iv1;
+    this.minValue=iv2;
+    this.h=iw / 2;
+    this.posY=(iyp1 + iyp2) / 2;
+    this.lock=false;
+  }
+  checkMouse() {
+    if (mouseX > this.posX + (this.w / 8) - (this.w / 2) && mouseX < this.posX + (this.w / 8) + (this.w / 2) && mouseY > this.posY - this.h / 2 && mouseY < this.posY + this.h / 2){
+      return true;      
+    }
+    else{
+     return false; 
+    }
+  }
+  display(){
+    fill(50);
+    rectMode(CORNER);
+    rect(this.posX,this.minY,this.w / 5, this.maxY - this.minY,50);
+    if(!this.checkMouse()){
+      fill(0,255,0);
+    }
+    if(this.checkMouse() || this.lock){
+      fill(0,150,0);
+    }
+    rectMode(CENTER);
+    rect(this.posX + this.w / 8,this.posY,this.w,this.w / 2,20);
+  }
+  move(){
+    if(this.checkMouse() && mouseIsPressed){
+     this.lock=true;
+    }
+    if(this.lock){
+      this.posY = mouseY;
+      if(!mouseIsPressed){
+        this.lock=false;
+      }
+    }
+    if(this.posY > this.maxY){
+      this.posY = this.maxY;
+    }
+    if(this.posY < this.minY){
+      this.posY = this.minY;
+    }
+  }
+  changeVar(){
+    this.variable = (-(this.posY - this.minY) / (this.maxY - this.minY) + 1) * (this.maxValue - this.minValue) + this.minValue;
+  }
+}
+// button class
+class Button {
+  constructor(ixp, iyp, iw, ih, itext, icolor1, icolor2, ido) {
+    this.w=iw; // button width
+    this.h=ih; // button height
+    this.posX=ixp; // button x postion
+    this.posY=iyp; // button y position
+    this.text=itext; // button label
+    this.color1=icolor1; // button default color
+    this.color2=icolor2; // button color when under mouse
+    this.do=ido; // button function
+  }
+  checkMouse() {
+    if (mouseX > this.posX && mouseX < this.posX + this.w && mouseY > this.posY && mouseY < this.posY + this.h){
+      return true;      
+    }
+    else{
+     return false; 
+    }
+  }
+  display(){
+   if(this.checkMouse()){
+    fill(this.color2);
+    }
+  if(!this.checkMouse()){
+    fill(this.color1)
+    }
+    rect(this.posX,this.posY,this.w,this.h)
+    fill(0,0,0);
+    textAlign(LEFT, BOTTOM);
+    text(this.text,this.posX + this.w / 10,this.posY + this.h - this.h / 4);
+  }
+  handleClick(){
+    if(this.checkMouse()){
+      this.do();
+    }
+  }
+}
+function draw() {
+  background(200);
+  p1.all();
+  t1.display();
+  t2.display();
+  t3.display();
+  t4.display();
+  t5.display();
+  t1.trade();
+  t2.trade();
+  t3.trade();
+  t4.trade();
+  t5.trade();
+}
